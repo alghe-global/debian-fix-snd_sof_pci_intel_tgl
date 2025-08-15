@@ -1,0 +1,9 @@
+[Unit]
+Description=Remove forcefully and install again snd_sof_pci_intel_tgl kernel driver
+After=sound.target
+
+[Service]
+ExecStart=/etc/init.d/fix-sound start
+
+[Install]
+WantedBy=default.target

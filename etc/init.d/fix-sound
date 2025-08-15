@@ -1,0 +1,48 @@
+#!/bin/sh
+set -e
+
+### BEGIN INIT INFO
+# Provides:          fix-sound
+# Required-Start:    $all
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:
+# Short-Description: Remove forcefully and install again snd_sof_pci_intel_tgl kernel driver
+### END INIT INFO
+
+# Get lsb functions
+. /lib/lsb/init-functions
+
+case "$1" in
+	start)
+                rmmod -f snd_sof_pci_intel_tgl
+                modprobe snd_sof_pci_intel_tgl
+		if [ $? -ne 0 ]; then
+		    log_failure_msg "Failed to load snd_sof_pci_intel_tgl kernel driver after removing it forcefully"
+		else
+		    log_success_msg "Successfully removed and installed snd_sof_pci_intel_tgl driver"
+		fi
+		;;
+
+	stop)
+                rmmod -f snd_sof_pci_intel_tgl
+		if [ $? -ne 0 ]; then
+		    log_failure_msg "Failed to remove forcefully snd_sof_pci_intel_tgl"
+		else
+		    log_success_msg "Successfully removed snd_sof_pci_intel_tgl driver"
+		fi
+		;;
+
+	restart)
+		$0 start
+		;;
+
+	force-reload)
+		$0 restart
+		;;
+
+	*)
+		echo "Usage: fix-sound {start|stop|restart|status}"
+		exit 1
+		;;
+esac
